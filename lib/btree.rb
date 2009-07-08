@@ -26,11 +26,15 @@
   end
 
   class Node
-    attr_reader :items, :parent
+    attr_reader :id, :items, :parent
+
+    @@size = 0
 
     def initialize(parent = 0, values = nil)
       @parent = parent
       @items = if values then values.sort else [] end
+      @id = @@size
+      @@size += 1
     end
 
     def size
