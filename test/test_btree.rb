@@ -8,7 +8,7 @@ class TestBTree < Test::Unit::TestCase
     empty = Node.new
     unsort = Node.new(0, [5, 2, 7, 11, 9])
     
-    assert_equal 0, root_parent.parent
+    assert_equal nil, root_parent.parent
     assert_equal 5, five_parent.parent
     assert_equal [], empty.items
     assert_equal [2, 5, 7, 9, 11], unsort.items
