@@ -35,21 +35,8 @@
       @nodes << node
     end
 
-    # Is node a leaf?
-    # Return: True/False
-    def leaf?(node)
-      @nodes.all? { |other_node| other_node.parent!=node }
-    end
-
-    #Finding node
-    #Return: id of node or nil
-    def find_node(parent, position)
-      i = 0
-      while i<@nodes.size
-        break if @nodes[i].parent==parent && @nodes[i].position==position
-        i += 1
-      end
-      if i==@nodes.size then nil else @nodes[i] end
+    def add_sub_trees(root, nodes = [])
+      nodes.each { |node| @nodes[root].add_sub_tree(@nodes[node]) }
     end
 
     #Finding a leaf node where value should be added
@@ -74,52 +61,17 @@
       end
     end
 
-    #Move subtrees to make space for new value(and its subtrees)
-    def change_position(node, position)
-      elements =[]
-      (position..(node.size)).each do |item|
-        elements << find_node(node.id, item)
-      end
-      elements.compact!
-      elements.each { |element| element.incrase_position } unless elements.empty?
-    end
-
-    
-    #Insert new value into B-tree
-    #Example: insert_value(10) - insert value 10 to tree
-    #         insert_value(10, 2, [1,2], [3,4]) - insert value 10 to node 2 and add subtrees to inserted element
-    def insert_value(value, node = nil, lnode = nil, rnode = nil)
-      node ||= @nodes[find_leaf(value)]
-      new_position = node.add(value)
-
-      #Add sub trees
-      change_position(node, new_position)
-      if lnode || rnode
-        add(Node.new(:parent => node.id, :values => lnode, :position => new_position))
-        add(Node.new(:parent => node.id, :values => rnode, :position => new_position+1))
-      end
-
-      if node.size>@max
-        middle = node.items[node.items.size/2]
-        left_node = Node
-        right_node = []
-        node.items.each do |item|
-          if item < middle
-            left_node << item
-          elsif item > middle
-            right_node << item
-          end
-        end
-        insert_value(middle, @nodes[node.parent], left_node, right_node) if node.parent
-        @nodes.delete(node)
-      end
-    end
 
   end
 
+  # Node looks like  st[key]st[key]st[key]st
+  # st - id number of subtree connected to node
+  # key - value
+  # node has id number and parent(id number of its parent)
   class Node
     attr_reader :sub_trees, :keys
     attr_accessor :id, :parent
+
     def initialize(keys = [])
       @keys = keys.sort
       @parent = nil
@@ -138,14 +90,37 @@
     def right
       @keys.last
     end
+    
+    def leaf?
+      @sub_trees.nitems == 0
+    end
 
-    def add_sub_tree(node)
-      i = 0
-      while i<@keys.size
-        break if node.right < @keys[i]
-        i += 1
+    # Find subtree where you can find a value
+    # Return subtree position in nood or false(value is in node)
+    # Example:
+    # Node: 0 [5] 1 [10] 2  Value: 7
+    # Searching number 7 is greater then 5 and less then 10 so it can be in subtree(1). Return 1
+    def find_subtree(value)
+      if @keys.include?(value)
+        false
+      else
+        i = 0
+        while i<@keys.size
+          break if value < @keys[i]
+          i += 1
+        end
+        i
       end
-      if node.left>@keys[i-1] || i==0
+    end
+
+    # Add subtree to a node
+    # Return subtree position in nood where subtree was added or false(can not add subtree)
+    # Example:
+    # Node: ID:1 nil [5] nil [10] nil SubNode: ID:2 nil [1] nil [2] nil
+    # SubNode can and will be added before value 5. Return 0
+    def add_sub_tree(node)
+      i = find_subtree(node.right)
+      if i!=false && (node.left>@keys[i-1] || i==0)
         @sub_trees[i] = node.id
         node.parent = @id
         i
@@ -155,14 +130,25 @@
       end
     end
 
+    # Add value to a node
+    # Return true or false(value is already in node, adding value destroy some subtree)
+    # Example:
+    # Node: 0 [5] nil [10] nil Value: 20
+    # New node: 0 [5] nil [10] nil [20] nil
+    # Example 2:
+    # Node: 0 [5] 1 [10] 2 Value: 20
+    # New node: 0 [5] 1 [10] nil [20] nil
+    # Return false. Subtree 2 is lost
     def add(element)
       unless @keys.include?(element)
         @keys << element
         @keys.sort!
+        #Shift right
         sub_trees_old = @sub_trees.map
         ((@keys.index(element))..(@keys.size)).each do |i|
           @sub_trees[i] = if i>@keys.index(element)+1 then sub_trees_old[i-1] else nil end
         end
+        
         if @sub_trees.compact == sub_trees_old.compact
           true
         else
@@ -172,9 +158,5 @@
       else
         false
       end
-    end
-
-    def delete(element)
-      @items.delete(element)
     end
   end
