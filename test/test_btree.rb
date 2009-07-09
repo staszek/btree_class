@@ -5,27 +5,26 @@ class TestBTree < Test::Unit::TestCase
 
 
   # Setup tree:
-  #                0
-  #           [4,8,12,16]
-  #   //    /     |      \       \\
-  #   1     2     3      4        5
-  # [1,2] [5,6] [9,10] [13,14] [17,18]
+  #             0
+  #         [6,12,18]
+  #   //    /     \     \\
+  #   1     2     3      4
+  # [1,2] [7,8] [13,14] [19,20]
   #
   def setup
     @tree = BTree.new
-    @tree.nodes << Node.new(@tree.id, :values => [4, 8, 12, 16])
-    @tree.nodes << Node.new(@tree.id, :parent => 0, :values => [1, 2], :position => 0)
-    @tree.nodes << Node.new(@tree.id, :parent => 0, :values => [5, 6], :position => 1)
-    @tree.nodes << Node.new(@tree.id, :parent => 0, :values => [9, 10], :position => 2)
-    @tree.nodes << Node.new(@tree.id, :parent => 0, :values => [13, 14], :position => 3)
-    @tree.nodes << Node.new(@tree.id, :parent => 0, :values => [17, 18], :position => 4)
+    @tree.add(Node.new(:values => [6, 12, 18]))
+    @tree.add(Node.new(:parent => 0, :values => [1, 2], :position => 0))
+    @tree.add(Node.new(:parent => 0, :values => [7, 8], :position => 1))
+    @tree.add(Node.new(:parent => 0, :values => [13, 14], :position => 2))
+    @tree.add(Node.new(:parent => 0, :values => [19, 20], :position => 3))
   end
   
   def test_node_initialize
-    root_parent = Node.new(0)
-    five_parent = Node.new(0, :parent => 5)
-    empty = Node.new(0)
-    unsort = Node.new(0, :values => [5, 2, 7, 11, 9])
+    root_parent = Node.new
+    five_parent = Node.new(:parent => 5)
+    empty = Node.new
+    unsort = Node.new(:values => [5, 2, 7, 11, 9])
     
     assert_equal nil, root_parent.parent
     assert_equal 5, five_parent.parent
@@ -34,7 +33,7 @@ class TestBTree < Test::Unit::TestCase
   end
 
   def test_node_actions
-    node = Node.new(0, :values => [11, 12, 14])
+    node = Node.new(:values => [11, 12, 14])
     assert_equal 3, node.size
     assert_equal 11, node.left
     assert_equal 14, node.right
@@ -52,7 +51,7 @@ class TestBTree < Test::Unit::TestCase
   end
 
   def test_subtree
-    node = Node.new(0, :values => [2, 5, 10])
+    node = Node.new(:values => [2, 5, 10])
     assert_equal 0, node.subtree(1)
     assert_equal 1, node.subtree(3)
     assert_equal 3, node.subtree(11)
@@ -71,8 +70,8 @@ class TestBTree < Test::Unit::TestCase
 
   def test_finding_leaf
     assert_equal 1, @tree.find_leaf(3)
-    assert_equal 3, @tree.find_leaf(11)
-    assert_equal 5, @tree.find_leaf(20)
+    assert_equal 3, @tree.find_leaf(15)
+    assert_equal 4, @tree.find_leaf(27)
   end
 
   def test_searching
@@ -80,8 +79,31 @@ class TestBTree < Test::Unit::TestCase
       node.items.all? { |item| @tree.find_value(item) }
     end
     assert_equal true, all_nodes
-    assert_equal false, @tree.find_value(24)
+    assert_equal false, @tree.find_value(40)
   end
+
+  def test_changing_position
+    @tree.change_position(@tree.nodes[0], 2)
+    assert_equal 0, @tree.nodes[1].position
+    assert_equal 1, @tree.nodes[2].position
+    assert_equal 3, @tree.nodes[3].position
+  end
+
+  def test_insert
+    @tree.insert_value(9)
+    @tree.insert_value(10)
+    assert_equal [7, 8, 9, 10], @tree.nodes[2].items
+    
+    @tree.insert_value(11)
+    assert_equal [6, 9, 12, 18], @tree.nodes[0].items
+    assert_equal [1, 2], @tree.find_node(0, 0).items
+    assert_equal [7, 8], @tree.find_node(0, 1).items
+    assert_equal [10, 11], @tree.find_node(0, 2).items
+    assert_equal [13, 14], @tree.find_node(0, 3).items
+
+
+  end
+
 
 
 end
