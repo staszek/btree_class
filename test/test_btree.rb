@@ -75,6 +75,15 @@ class TestBTree < Test::Unit::TestCase
     assert_equal 5, @tree.find_leaf(20)
   end
 
+  def test_searching
+    all_nodes = @tree.nodes.all? do |node|
+      node.items.all? { |item| @tree.find_value(item) }
+    end
+    assert_equal true, all_nodes
+    assert_equal false, @tree.find_value(24)
+  end
+
+
 end
 
 

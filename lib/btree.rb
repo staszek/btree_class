@@ -32,9 +32,7 @@
       @nodes.size
     end
 
-    #Finding value t/f
     #insert value
-    #
 
     # Is node a leaf?
     # Return: True/False
@@ -61,6 +59,17 @@
         node
       else
         find_leaf(element, find_node(node, @nodes[node].subtree(element)).id)
+      end
+    end
+
+    #Searching a value in the B-tree
+    #Return: True/False
+    def find_value(value, node = 0)
+      subtree = @nodes[node].subtree(value)
+      if subtree==false
+        true
+      else
+        if leaf?(node) then false else find_value(value, find_node(node, subtree).id) end
       end
     end
 
