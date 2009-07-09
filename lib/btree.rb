@@ -101,7 +101,7 @@
 
       if node.size>@max
         middle = node.items[node.items.size/2]
-        left_node = []
+        left_node = Node
         right_node = []
         node.items.each do |item|
           if item < middle
@@ -118,57 +118,63 @@
   end
 
   class Node
-    attr_reader :items, :parent, :position
-    attr_accessor :id
-
-    def initialize(options = {})
-      @parent = options[:parent] || nil
-      @position = options[:position] || 0
-      @items = options[:values] || []
-      @items.sort!
+    attr_reader :sub_trees, :keys
+    attr_accessor :id, :parent
+    def initialize(keys = [])
+      @keys = keys.sort
+      @parent = nil
       @id = nil
+      @sub_trees = Array.new(@keys.size+1)
     end
 
     def size
-      @items.size
+      @keys.size
     end
-
+    
     def left
-      @items.first
+      @keys.first
     end
 
     def right
-      @items.last
+      @keys.last
+    end
+
+    def add_sub_tree(node)
+      i = 0
+      while i<@keys.size
+        break if node.right < @keys[i]
+        i += 1
+      end
+      if node.left>@keys[i-1] || i==0
+        @sub_trees[i] = node.id
+        node.parent = @id
+        i
+      else
+        p "Error: can not add subtree"
+        false
+      end
     end
 
     def add(element)
-      unless @items.include?(element)
-        @items << element
-        @items.sort!
+      unless @keys.include?(element)
+        @keys << element
+        @keys.sort!
+        sub_trees_old = @sub_trees.map
+        ((@keys.index(element))..(@keys.size)).each do |i|
+          @sub_trees[i] = if i>@keys.index(element)+1 then sub_trees_old[i-1] else nil end
+        end
+        if @sub_trees.compact == sub_trees_old.compact
+          true
+        else
+          p "Errot: Lost subtree"
+          false
+        end
+      else
+        false
       end
-      @items.index(element)
     end
 
     def delete(element)
       @items.delete(element)
-    end
-
-    def incrase_position
-      @position += 1
-    end
-
-    #Return position where element should be added
-    #Return: id or false if element is in node
-    def subtree(element)
-      if self.items.include?(element)
-        false
-      else
-        i = 0
-        while self.items[i]<element
-          i += 1
-          break if i==self.size
-        end
-        i
-      end
     end
   end
