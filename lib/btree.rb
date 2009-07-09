@@ -18,14 +18,23 @@
 # See README file
 
 
-  class Tree
-    attr_reader :n, :nodes
+
+  class BTree
+    attr_reader :n
+    attr_accessor :nodes
     def initialize(options = {})
       @n = options[:n] || 5
       @nodes = []
     end
 
-    protected
+    #Return: id for next node
+    def id
+      @nodes.size
+    end
+
+    #Finding value t/f
+    #insert value
+    #
 
     # Is node a leaf?
     # Return: True/False
@@ -41,7 +50,7 @@
         break if @nodes[i].parent==parent && @nodes[i].position==position
         i += 1
       end
-      if i==@nodes.size then nil else i end
+      if i==@nodes.size then nil else @nodes[i] end
     end
 
     #Finding a leaf node where value should be added
@@ -51,12 +60,7 @@
       if leaf?(node)
         node
       else
-        i = 0
-        while @nodes[node].items[i]<element
-          i += 1
-          break if i==@nodes[node].size
-        end
-        find_leaf(element, find_node(node, i))
+        find_leaf(element, find_node(node, @nodes[node].subtree(element)).id)
       end
     end
 
@@ -65,14 +69,12 @@
   class Node
     attr_reader :id, :items, :parent, :position
 
-    @@size = 0
-
-    def initialize(parent = nil, values = nil, position = 0)
-      @parent = parent
-      @position = position
-      @items = if values then values.sort else [] end
-      @id = @@size
-      @@size += 1
+    def initialize(id, options = {})
+      @parent = options[:parent] || nil
+      @position = options[:position] || 0
+      @items = options[:values] || []
+      @items.sort!
+      @id = id
     end
 
     def size
@@ -96,5 +98,20 @@
 
     def delete(element)
       @items.delete(element)
+    end
+
+    #Return position where element should be added
+    #Return: id or false if element is in node
+    def subtree(element)
+      if self.items.include?(element)
+        false
+      else
+        i = 0
+        while self.items[i]<element
+          i += 1
+          break if i==self.size
+        end
+        i
+      end
     end
   end
