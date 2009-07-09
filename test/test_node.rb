@@ -1,7 +1,7 @@
 require "test/unit"
 require "lib/btree.rb"
 
-class TestBTree < Test::Unit::TestCase
+class TestNode < Test::Unit::TestCase
 
 
   # Setup tree:
