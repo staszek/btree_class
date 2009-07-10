@@ -53,7 +53,35 @@ class TestBTree < Test::Unit::TestCase
     @small_tree.insert_value(13)
     @small_tree.insert_value(14)
     @small_tree.insert_value(15)
-    
+
+    assert_tree(@small_tree)
+    @small_tree.add(Node.new([50,51,52,52,54]))
+    assert_not_tree(@small_tree)
+  end
+
+  def check_tree(tree)
+    nodes = tree.nodes.collect { |node| node if node.id>=0  }
+    nodes.compact!
+    size = nodes.all? do |node|
+      node.size>=tree.min && node.size<=tree.max
+    end
+    val = nodes.all? do |node|
+      less, greater = [], []
+      node.sub_trees.each_with_index do |sub_tree, index|
+        less << ( tree.nodes[sub_tree].right < node.keys[index] if index<node.size && !sub_tree.nil? )
+        greater << ( tree.nodes[sub_tree].left > node.keys[index-1] if index>0 && !sub_tree.nil? )
+      end
+      less.compact!.delete(false).nil? && greater.compact!.delete(false).nil?
+    end
+    size && val
+  end
+
+  def assert_tree(tree)
+    if check_tree(tree) then assert(true) else assert(false) end
+  end
+
+  def assert_not_tree(tree)
+    unless check_tree(tree) then assert(true) else assert(false) end
   end
 
 

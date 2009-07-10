@@ -20,7 +20,7 @@
 
 
   class BTree
-    attr_reader :n, :min, :nodes
+    attr_reader :n, :min, :max, :nodes
     def initialize(options = {})
       @n = options[:n] || 5
       @nodes = []
@@ -90,7 +90,6 @@
           unless node.parent.nil?
             insert_value(middle, @nodes[node.parent], left_node, right_node)
           else
-            p "HURRAAA !!!!!"
             new_root_node = Node.new
             add(new_root_node)
             new_root_node.add(middle)
