@@ -76,6 +76,13 @@ class TestNode < Test::Unit::TestCase
     assert_equal [2, 5, 8, 10, 15, 16], @root_node.keys
   end
 
+  def test_node_delete
+    assert_equal true, @root_node.delete(10)
+    assert_equal [1, 2, 3], @root_node.sub_trees
+    assert_equal [5, 15], @root_node.keys
+    assert_equal false, @root_node.delete(40)
+  end
+
   def test_leaf?
     assert_equal true, @first_node.leaf?
     assert_equal false, @root_node.leaf?

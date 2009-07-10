@@ -11,6 +11,16 @@ class TestBTree < Test::Unit::TestCase
   #   1     2     3      4
   # [1,2] [7,8] [13,14] [19,20]
   #
+  # Small tree:
+  #          0
+  #         [4]
+  #    /          \
+  #    1          2
+  #   [2]       [6,8]
+  #  /   \   /   |     \
+  #  3   4   5   6     7
+  # [1] [3] [5] [7] [9, 10]
+  #
   def setup
     @tree = BTree.new
     @tree.add(Node.new([6, 12, 18]))
@@ -19,21 +29,6 @@ class TestBTree < Test::Unit::TestCase
     @tree.add(Node.new([13, 14]))
     @tree.add(Node.new([19, 20]))
     @tree.add_sub_trees(0, [1, 2, 3, 4])
-  end
-
-  def test_searching
-    all_nodes = @tree.nodes.all? do |node|
-      node.keys.all? { |item| @tree.find_value(item) }
-    end
-    assert_equal true, all_nodes
-    assert_not_equal true, @tree.find_value(24)
-  end
-
-  def test_insert
-    @tree.insert_value(21)
-    @tree.insert_value(22)
-    assert_equal [19, 20, 21, 22], @tree.nodes[4].keys
-    assert_equal false, @tree.insert_value(20)
 
     @small_tree = BTree.new(:n => 3)
     @small_tree.add(Node.new([4]))
@@ -47,41 +42,81 @@ class TestBTree < Test::Unit::TestCase
     @small_tree.add_sub_trees(0, [1, 2])
     @small_tree.add_sub_trees(1, [3, 4])
     @small_tree.add_sub_trees(2, [5, 6, 7])
+  end
 
+  def test_searching
+    all_nodes = @tree.nodes.all? do |node|
+      node.keys.all? { |item| @tree.find_value(item)[:find] }
+    end
+    assert_equal true, all_nodes
+    assert_not_equal true, @tree.find_value(24)[:find]
+  end
+
+  def test_brother
+    assert_equal false, @tree.brother(@tree.nodes[1], :left)
+    assert_equal false, @tree.brother(@tree.nodes[4], :right)
+    assert_equal 2, @tree.brother(@tree.nodes[1], :right).id
+    assert_equal 3, @tree.brother(@tree.nodes[4], :left).id
+  end
+
+  def test_insert
+    @tree.insert_value(21)
+    @tree.insert_value(22)
+    assert_equal [19, 20, 21, 22], @tree.nodes[4].keys
+    assert_equal false, @tree.insert_value(20)
+  end
+
+  def test_insert_split
+    # normal split
     @small_tree.insert_value(11)
     @small_tree.insert_value(12)
     @small_tree.insert_value(13)
     @small_tree.insert_value(14)
-    @small_tree.insert_value(15)
-
     assert_tree(@small_tree)
+    assert_equal [9, 10, 11], @small_tree.nodes[7].keys
+    assert_equal [13, 14], @small_tree.nodes[13].keys
+
+    # root split
+    @small_tree.insert_value(15)
+    assert_tree(@small_tree)
+    assert_equal [8], @small_tree.nodes[20].keys
+    assert_equal [15], @small_tree.nodes[15].keys
+  end
+
+  def test_insert_node_size_wrong
     @small_tree.add(Node.new([50,51,52,52,54]))
     assert_not_tree(@small_tree)
   end
 
-  def check_tree(tree)
-    nodes = tree.nodes.collect { |node| node if node.id>=0  }
-    nodes.compact!
-    size = nodes.all? do |node|
-      node.size>=tree.min && node.size<=tree.max
-    end
-    val = nodes.all? do |node|
-      less, greater = [], []
-      node.sub_trees.each_with_index do |sub_tree, index|
-        less << ( tree.nodes[sub_tree].right < node.keys[index] if index<node.size && !sub_tree.nil? )
-        greater << ( tree.nodes[sub_tree].left > node.keys[index-1] if index>0 && !sub_tree.nil? )
-      end
-      less.compact!.delete(false).nil? && greater.compact!.delete(false).nil?
-    end
-    size && val
+
+  def test_delete_value_in_tree
+    assert_equal false, @small_tree.delete_value(11)
+  end
+
+  def test_delete_leaf_enough_size
+    @small_tree.delete_value(10)
+    assert_equal false, @small_tree.find_value(10)[:find]
+    assert_equal [9], @small_tree.nodes[7].keys
+  end
+
+  def test_delete_with_brother
+    @small_tree.delete_value(7)
+    assert_tree(@small_tree)
+    assert_equal false, @small_tree.find_value(7)[:find]
+    assert_equal [6, 9], @small_tree.nodes[2].keys
+    assert_equal [8], @small_tree.nodes[6].keys
+    assert_equal [10], @small_tree.nodes[7].keys
+    
+    @small_tree.nodes.each { |node| p "id: #{node.id} keys #{node.keys} sub #{node.sub_trees} par #{node.parent}"  }
+    
   end
 
   def assert_tree(tree)
-    if check_tree(tree) then assert(true) else assert(false) end
+    if tree.check_tree then assert(true) else assert(false) end
   end
 
   def assert_not_tree(tree)
-    unless check_tree(tree) then assert(true) else assert(false) end
+    unless tree.check_tree then assert(true) else assert(false) end
   end
 
 
