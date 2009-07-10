@@ -27,6 +27,7 @@
       @max = @n - 1
       @min = @n / 2
       @id_next = 0
+      @root = 0
     end
 
     # Add node to a tree. Set id number of node
@@ -47,12 +48,12 @@
     # Example:
     # Node: ID:0 1 [5] 2 [10] 3 SubNode: ID:2 nil [6] nil [9] nil  Value: 7
     # Number 7 is not in tree but it should be in node(2). Return [2, false]
-    def find_value(value, node = 0)
+    def find_value(value, node = @root)
       position = @nodes[node].find_subtree(value)
       if position==false
         {:node => node, :find => true}
       else
-        if @nodes[node].leaf? then {:node => node, :find => false} else find_value(value, @nodes[node].sub_trees[position]) end
+        if @nodes[node].leaf? || @nodes[node].sub_trees[position].nil? then {:node => node, :find => false} else find_value(value, @nodes[node].sub_trees[position]) end
       end
     end
 
@@ -103,11 +104,11 @@
             new_root_node.add(middle)
             new_root_node.add_sub_tree(left_node)
             new_root_node.add_sub_tree(right_node)
+            @root = new_root_node.id
           end
           node.id = -1                            #delete old node
         end
       else
-        p "Insert Error: Value is already in tree "
         false
       end
     end
@@ -136,36 +137,46 @@
         node = @nodes[find_result[:node]]
         if node.leaf?
           if node.size-1>=@min
-            p "lisc i wystarczajaco duzy"
+            # leaf and enough size
+            true
           else
-            p "lisc ale za maly"
+            # leaf but not enough size
             parent = @nodes[node.parent]
-            left_brother = brother(node, :left)
-            if left_brother && left_brother.size>@min
-              p "lewy brat"
-              position = parent.find_subtree(node.left)-1
-              node.add(parent.keys[position])
-              parent.swith_value(position, left_brother.right)
-              left_brother.delete(left_brother.right)
+            left_brother = brother(node, :left) || []
+            right_brother = brother(node, :right) || []
+            
+            if left_brother.size>right_brother.size
+              brother_info = {:brother => left_brother, :position => parent.find_subtree(node.left)-1, :value => left_brother.right}
             else
-              right_brother = brother(node, :right)
-              if right_brother && right_brother.size>@min
-                p "prawy brat"
-                position = parent.find_subtree(node.left)
-                node.add(parent.keys[position])
-                parent.swith_value(position, right_brother.left)
-                right_brother.delete(right_brother.left)
-              else
-                p "zaden brat"
-              end
+              brother_info = {:brother => right_brother, :position => parent.find_subtree(node.left), :value => right_brother.left}
+            end
+
+            if brother_info[:brother].size>@min
+              # can find brother with enough size
+              node.add(parent.keys[brother_info[:position]])
+              parent.swith_value(brother_info[:position], brother_info[:value])
+              brother_info[:brother].delete(brother_info[:value])
+            else
+              # can not find brother with enough size
+              new_keys = []
+              new_keys += brother_info[:brother].keys
+              new_keys += node.keys
+              new_keys << parent.keys[brother_info[:position]]
+              new_keys.delete(value)
+              new_keys.sort!
+
+              parent.swith_value(brother_info[:position], new_keys.first)
+              new_keys.shift
+              new_keys.each { |key| brother_info[:brother].add(key)}
+              parent.sub_tree_nil(parent.find_subtree(value))
+              node.id = -1
             end
           end
           node.delete(value)
         else
-            p "nie lisc"
+            # not leaf
         end
       else
-        p "Delete Errot: Value is not in tree"
         false
       end
     end
@@ -225,8 +236,14 @@
       @sub_trees.nitems == 0
     end
 
+    # Set value at position(in keys) to new value
     def swith_value(position, value)
       @keys[position]=value
+    end
+
+    # Set sub tree to nil. Disconnect sub tree
+    def sub_tree_nil(position)
+      @sub_trees[position] = nil
     end
 
     # Find subtree where you can find a value
@@ -259,7 +276,6 @@
         node.parent = @id
         i
       else
-        p "Error: can not add subtree"
         false
       end
     end
@@ -286,7 +302,7 @@
         if @sub_trees.compact == sub_trees_old.compact
           true
         else
-          p "Error: Lost subtree"
+          # Lost subtree"
           false
         end
       else
@@ -294,6 +310,9 @@
       end
     end
 
+
+    # Delete value from node
+    # Return true or false(value is not in tree)
     def delete(element)
       if @keys.include?(element)
         

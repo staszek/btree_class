@@ -31,12 +31,12 @@ B-tree of order n - n childern maximum, n/2 children minimum
 2. If it was in leaf node and number of elements is now not less then minimum do nothing
 3. If it was in leaf node and number of elements is now less then minimum do
     a)If left or right brother(node) has number of elements grater then minimum
-        - insert parent value to actual node
+        - insert parent's value to actual node
         - move smallest/biggest(for right/left) value from brother to parent
     b)If left and right brother(node) has not number of elements grater then minimum
-        - from parent value, actual node values and brother values choose middle value
+        - from parent's value, actual node's values and brother's values choose smalles value
         - make it parent
-        - make subtree from others value
+        - make one subtree from others value(add values from node to its brother)
 4. If it was not in leaf node
     a)
 

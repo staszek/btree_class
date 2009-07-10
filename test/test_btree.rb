@@ -106,9 +106,15 @@ class TestBTree < Test::Unit::TestCase
     assert_equal [6, 9], @small_tree.nodes[2].keys
     assert_equal [8], @small_tree.nodes[6].keys
     assert_equal [10], @small_tree.nodes[7].keys
-    
-    @small_tree.nodes.each { |node| p "id: #{node.id} keys #{node.keys} sub #{node.sub_trees} par #{node.parent}"  }
-    
+  end
+
+  def test_delete_without_brother
+    @small_tree.delete_value(5)
+    assert_tree(@small_tree)
+    assert_equal false, @small_tree.find_value(5)[:find]
+    assert_equal [7], @small_tree.nodes[6].keys
+    assert_equal [6, 8], @small_tree.nodes[2].keys
+    assert_equal [9, 10], @small_tree.nodes[7].keys
   end
 
   def assert_tree(tree)
