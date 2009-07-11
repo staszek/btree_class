@@ -1,6 +1,11 @@
 require "test/unit"
 require "lib/btree.rb"
 
+#class MyClass
+ # public :foo
+
+#end
+
 class TestBTree < Test::Unit::TestCase
 
 
@@ -22,26 +27,17 @@ class TestBTree < Test::Unit::TestCase
   # [1] [3] [5] [7] [9, 10]
   #
   def setup
-    @tree = BTree.new
-    @tree.add(Node.new([6, 12, 18]))
+    # Manual tree bulding - insert nodes(with values)
+    @tree = BTree.new(:node => Node.new([6, 12, 18]))
     @tree.add(Node.new([1, 2]))
     @tree.add(Node.new([7, 8]))
     @tree.add(Node.new([13, 14]))
     @tree.add(Node.new([19, 20]))
     @tree.add_sub_trees(0, [1, 2, 3, 4])
 
+    # Fast tree bulding - insert values
     @small_tree = BTree.new(:n => 3)
-    @small_tree.add(Node.new([4]))
-    @small_tree.add(Node.new([2]))
-    @small_tree.add(Node.new([6, 8]))
-    @small_tree.add(Node.new([1]))
-    @small_tree.add(Node.new([3]))
-    @small_tree.add(Node.new([5]))
-    @small_tree.add(Node.new([7]))
-    @small_tree.add(Node.new([9, 10]))
-    @small_tree.add_sub_trees(0, [1, 2])
-    @small_tree.add_sub_trees(1, [3, 4])
-    @small_tree.add_sub_trees(2, [5, 6, 7])
+    @small_tree.add_values( (1..10).to_a)
   end
 
   def test_searching
@@ -64,6 +60,10 @@ class TestBTree < Test::Unit::TestCase
     @tree.insert_value(22)
     assert_equal [19, 20, 21, 22], @tree.nodes[4].keys
     assert_equal false, @tree.insert_value(20)
+
+    empty_tree = BTree.new
+    empty_tree.insert_value(10)
+    assert_equal [10], empty_tree.nodes[0].keys
   end
 
   def test_insert_split
@@ -72,15 +72,16 @@ class TestBTree < Test::Unit::TestCase
     @small_tree.insert_value(12)
     @small_tree.insert_value(13)
     @small_tree.insert_value(14)
+
     assert_tree(@small_tree)
-    assert_equal [9, 10, 11], @small_tree.nodes[7].keys
-    assert_equal [13, 14], @small_tree.nodes[13].keys
+    assert_equal [10, 12], @small_tree.nodes[16].keys
+    assert_equal [13, 14], @small_tree.nodes[18].keys
 
     # root split
     @small_tree.insert_value(15)
     assert_tree(@small_tree)
-    assert_equal [8], @small_tree.nodes[20].keys
-    assert_equal [15], @small_tree.nodes[15].keys
+    assert_equal [8], @small_tree.nodes[25].keys
+    assert_equal [15], @small_tree.nodes[20].keys
   end
 
   def test_insert_node_size_wrong
@@ -96,25 +97,33 @@ class TestBTree < Test::Unit::TestCase
   def test_delete_leaf_enough_size
     @small_tree.delete_value(10)
     assert_equal false, @small_tree.find_value(10)[:find]
-    assert_equal [9], @small_tree.nodes[7].keys
+    assert_equal [9], @small_tree.nodes[12].keys
   end
 
   def test_delete_with_brother
     @small_tree.delete_value(7)
     assert_tree(@small_tree)
     assert_equal false, @small_tree.find_value(7)[:find]
-    assert_equal [6, 9], @small_tree.nodes[2].keys
-    assert_equal [8], @small_tree.nodes[6].keys
-    assert_equal [10], @small_tree.nodes[7].keys
+    assert_equal [6, 9], @small_tree.nodes[9].keys
+    assert_equal [8], @small_tree.nodes[11].keys
+    assert_equal [10], @small_tree.nodes[12].keys
   end
 
   def test_delete_without_brother
     @small_tree.delete_value(5)
     assert_tree(@small_tree)
     assert_equal false, @small_tree.find_value(5)[:find]
-    assert_equal [7], @small_tree.nodes[6].keys
-    assert_equal [6, 8], @small_tree.nodes[2].keys
-    assert_equal [9, 10], @small_tree.nodes[7].keys
+    assert_equal [7], @small_tree.nodes[11].keys
+    assert_equal [6, 8], @small_tree.nodes[9].keys
+    assert_equal [9, 10], @small_tree.nodes[12].keys
+  end
+
+  def test_succ
+    assert_equal 7, @tree.succ(6)
+    assert_equal 8, @tree.succ(7)
+    assert_equal 12, @tree.succ(8)
+    assert_equal false, @tree.succ(20)
+    assert_equal false, @tree.succ(40)
   end
 
   def assert_tree(tree)

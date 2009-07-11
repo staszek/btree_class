@@ -20,7 +20,7 @@
 
 
   class BTree
-    attr_reader :n, :min, :max, :nodes
+    attr_reader :n, :min, :max, :nodes, :root, :id_next
     def initialize(options = {})
       @n = options[:n] || 5
       @nodes = []
@@ -28,6 +28,8 @@
       @min = @n / 2
       @id_next = 0
       @root = 0
+      node = options[:node] || Node.new
+      add(node)
     end
 
     # Add node to a tree. Set id number of node
@@ -96,7 +98,7 @@
           right_node.add_sub_tree(@nodes[node.sub_trees[node.keys.index(middle)+1]]) unless node.sub_trees[node.keys.index(middle)+1].nil?
 
           # add value to parent node or split if parent is root
-          unless node.parent.nil?
+          unless node.id==@root
             insert_value(middle, @nodes[node.parent], left_node, right_node)
           else
             new_root_node = Node.new
@@ -113,6 +115,10 @@
       end
     end
 
+    # Add many values into tree
+    def add_values(values = [])
+      values.each { |value| insert_value(value) }
+    end
 
     # Return left or right brother node(node with the same parent)
     # Return false if node does not have brother
@@ -175,6 +181,30 @@
           node.delete(value)
         else
             # not leaf
+        end
+      else
+        false
+      end
+    end
+
+
+    # Retrun next value in tree or false if value is maximum or not in tree
+    def succ(value)
+      find_result = find_value(value)
+      if find_result[:find]
+        node = @nodes[find_result[:node]]
+        position = node.keys.index(value)
+
+        if node.sub_trees[position+1].nil?                # Is next value in sub tree ?
+          if value==node.right                            # Value is at node end ?
+            parent = @nodes[node.parent]
+            parent_position = parent.find_subtree(value)
+            if parent_position<parent.size then parent.keys[parent_position] else false end
+          else
+            node.keys[position+1]
+          end
+        else
+          @nodes[node.sub_trees[position+1]].left
         end
       else
         false
@@ -322,8 +352,7 @@
           @sub_trees[i] = sub_trees_old[i+1]
         end
         @sub_trees.pop
-        @keys.delete(element)
-        
+        @keys.delete(element)     
         true
       else
         false
