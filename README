@@ -38,7 +38,8 @@ B-tree of order n - n childern maximum, n/2 children minimum
         - make it parent
         - make one subtree from others value(add values from node to its brother)
 4. If it was not in leaf node
-    a)
+    a) Change value to next value in tree
+    b) Delete next value from tree
 
 *** Searching algorithm ***
 Like in binary tree
@@ -48,4 +49,4 @@ Like in binary tree
 
 *** Upper iteration algorithm ***
 1. In first leaf node select first value
-2. Choose next value or next subtree(if it exist) or if it last value in node choose parent
+2. Choose next value or next subtree(if it exist) or if it is last value in node choose parent

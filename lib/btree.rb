@@ -137,56 +137,86 @@
 
     # Delete value from tree
     # Return false if value is not in tree
-    def delete_value(value)
+    # delete_value(10)    => Delete 10 from tree
+    # delete_value(10, 5) => Switch 5 to 10 and delete 10(old one) from tree
+    def delete_value(value, switch = nil)
       find_result = find_value(value)
       if find_result[:find]
         node = @nodes[find_result[:node]]
+
+        if switch
+          switch_node = @nodes[find_value(switch)[:node]]
+          switch_node.switch_value(switch_node.keys.index(switch), value)
+        end
+
         if node.leaf?
           if node.size-1>=@min
             # leaf and enough size
             true
           else
             # leaf but not enough size
-            parent = @nodes[node.parent]
-            left_brother = brother(node, :left) || []
-            right_brother = brother(node, :right) || []
-            
-            if left_brother.size>right_brother.size
-              brother_info = {:brother => left_brother, :position => parent.find_subtree(node.left)-1, :value => left_brother.right}
-            else
-              brother_info = {:brother => right_brother, :position => parent.find_subtree(node.left), :value => right_brother.left}
-            end
-
-            if brother_info[:brother].size>@min
-              # can find brother with enough size
-              node.add(parent.keys[brother_info[:position]])
-              parent.swith_value(brother_info[:position], brother_info[:value])
-              brother_info[:brother].delete(brother_info[:value])
-            else
-              # can not find brother with enough size
-              new_keys = []
-              new_keys += brother_info[:brother].keys
-              new_keys += node.keys
-              new_keys << parent.keys[brother_info[:position]]
-              new_keys.delete(value)
-              new_keys.sort!
-
-              parent.swith_value(brother_info[:position], new_keys.first)
-              new_keys.shift
-              new_keys.each { |key| brother_info[:brother].add(key)}
-              parent.sub_tree_nil(parent.find_subtree(value))
-              node.id = -1
-            end
+            merge(node, value) unless node.id==@root
           end
           node.delete(value)
         else
             # not leaf
+            delete_value(succ(value), value)
         end
       else
         false
       end
     end
 
+
+    # Merge nodes if one has less then minimum keys
+    # Parameter "empty"
+    #   true  =>  value is now in subtree. delete it from this node
+    def merge(node, value, empty = false)
+      parent = @nodes[node.parent]
+      parent_size = parent.size
+
+      left_brother = brother(node, :left) || []
+      right_brother = brother(node, :right) || []
+        
+      if left_brother.size>right_brother.size
+        brother_info = {:brother => left_brother, :position => parent.find_subtree(node.left)-1, :value => left_brother.right}
+      else
+        brother_info = {:brother => right_brother, :position => parent.find_subtree(node.left), :value => right_brother.left}
+      end
+
+      node.delete(node.keys[brother_info[:position]]) if empty
+
+      if brother_info[:brother].size>@min
+        # can find brother with enough size
+        node.add(parent.keys[brother_info[:position]])
+        parent.switch_value(brother_info[:position], brother_info[:value])
+        brother_info[:brother].delete(brother_info[:value])
+      else
+        # can not find brother with enough size
+        new_keys = []
+        new_keys += node.keys
+        new_keys << parent.keys[brother_info[:position]]
+        new_keys.delete(value) if value
+        new_keys.sort!
+        new_keys.each { |key| brother_info[:brother].add(key)}
+   
+        if parent.size-1<@min && parent.id!=@root
+          # parent node is too small, becouse we moved one value into sub tree
+          merge(parent, value, true)
+        else
+          # parend node is big enough
+          parent.delete(parent.keys[brother_info[:position]])
+        end
+        node.id = -1                                      #delete old node
+        if parent.id==@root && parent_size-1<@min
+          #change root, becouse root node is too small(all values were moved to another node)
+          @root = brother_info[:brother].id 
+          parent.id=-1
+        end
+      end
+
+      node.sub_trees.compact.each { |sub_tree| brother_info[:brother].add_sub_tree(@nodes[sub_tree]) }  # move sub trees
+    end
 
     # Retrun next value in tree or false if value is maximum or not in tree
     def succ(value)
@@ -204,11 +234,26 @@
             node.keys[position+1]
           end
         else
-          @nodes[node.sub_trees[position+1]].left
+          sub_tree = @nodes[node.sub_trees[position+1]]
+          loop do
+            break if sub_tree.leaf?
+           sub_tree = @nodes[sub_tree.sub_trees[0]]
+          end
+          sub_tree.left
         end
       else
         false
       end
+    end
+
+    # Return a first value(smalles) in a tree
+    def first_value
+      tree = @nodes[@root]
+      loop do
+        break if tree.leaf?
+        tree = @nodes[tree.sub_trees[0]]
+      end
+      tree.left
     end
 
     # Return true if B-tree is valid
@@ -267,7 +312,7 @@
     end
 
     # Set value at position(in keys) to new value
-    def swith_value(position, value)
+    def switch_value(position, value)
       @keys[position]=value
     end
 
@@ -325,7 +370,7 @@
         @keys.sort!
         #Shift right
         sub_trees_old = @sub_trees.map
-        ((@keys.index(element))..(@keys.size)).each do |i|
+        ((@keys.index(element)+1)..(@keys.size)).each do |i|
           @sub_trees[i] = if i>@keys.index(element)+1 then sub_trees_old[i-1] else nil end
         end
         

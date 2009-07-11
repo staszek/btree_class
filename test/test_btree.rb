@@ -113,8 +113,35 @@ class TestBTree < Test::Unit::TestCase
     @small_tree.delete_value(5)
     assert_tree(@small_tree)
     assert_equal false, @small_tree.find_value(5)[:find]
-    assert_equal [7], @small_tree.nodes[11].keys
-    assert_equal [6, 8], @small_tree.nodes[9].keys
+    assert_equal [6, 7], @small_tree.nodes[11].keys
+    assert_equal [8], @small_tree.nodes[9].keys
+    assert_equal [9, 10], @small_tree.nodes[12].keys
+
+    #delete all
+    @small_tree.delete_value(6)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(9)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(7)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(1)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(3)
+    @small_tree.delete_value(8)
+    @small_tree.delete_value(10)
+    @small_tree.delete_value(2)
+    @small_tree.delete_value(4)
+    assert_not_tree(@small_tree)
+    assert_equal [], @small_tree.nodes[@small_tree.root].keys
+
+  end
+
+  def test_delete_not_in_leaf
+    @small_tree.delete_value(4)
+    assert_tree(@small_tree)
+    assert_equal false, @small_tree.find_value(4)[:find]
+    assert_equal [5], @small_tree.nodes[10].keys
+    assert_equal [6, 7], @small_tree.nodes[11].keys
     assert_equal [9, 10], @small_tree.nodes[12].keys
   end
 
@@ -122,8 +149,14 @@ class TestBTree < Test::Unit::TestCase
     assert_equal 7, @tree.succ(6)
     assert_equal 8, @tree.succ(7)
     assert_equal 12, @tree.succ(8)
+    assert_equal 5, @small_tree.succ(4)
     assert_equal false, @tree.succ(20)
     assert_equal false, @tree.succ(40)
+  end
+
+  def test_first_value
+    assert_equal 1, @tree.first_value
+    assert_equal 1, @small_tree.first_value
   end
 
   def assert_tree(tree)

@@ -68,12 +68,11 @@ class TestNode < Test::Unit::TestCase
 
   def test_node_add
     assert_equal true, @root_node.add(8)
+    assert_equal false, @root_node.add(15)
     assert_equal [1, nil, nil, 2, 3], @root_node.sub_trees
-    assert_equal false, @root_node.add(2)
-    assert_equal [nil, nil, nil, nil, 2, 3], @root_node.sub_trees
-    assert_equal false, @root_node.add(16)
-    assert_equal [nil, nil, nil, nil, 2, nil, nil], @root_node.sub_trees
-    assert_equal [2, 5, 8, 10, 15, 16], @root_node.keys
+    @root_node.add(2)
+    assert_equal [1, nil, nil, nil, 2, 3], @root_node.sub_trees
+    assert_equal [2, 5, 8, 10, 15], @root_node.keys
   end
 
   def test_node_delete
