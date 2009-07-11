@@ -1,11 +1,6 @@
 require "test/unit"
 require "lib/btree.rb"
 
-#class MyClass
- # public :foo
-
-#end
-
 class TestBTree < Test::Unit::TestCase
 
 
@@ -149,9 +144,9 @@ class TestBTree < Test::Unit::TestCase
     assert_equal 7, @tree.succ(6)
     assert_equal 8, @tree.succ(7)
     assert_equal 12, @tree.succ(8)
-    assert_equal 5, @small_tree.succ(4)
-    assert_equal false, @tree.succ(20)
-    assert_equal false, @tree.succ(40)
+    assert_equal 5, @small_tree.next(4)
+    assert_equal false, @tree.next(20)
+    assert_equal false, @tree.next(40)
   end
 
   def test_first_value

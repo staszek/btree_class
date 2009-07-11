@@ -18,7 +18,7 @@ more: http://en.wikipedia.org/wiki/B-tree
 B-tree of order n - n childern maximum, n/2 children minimum
 
 *** Insert algorithm ***
-1. Find leaf node where insert value
+1. Find leaf where insert value
 2. If leaf is not full(contain less then maximum elements), insert value
 3. If it is full:
     a)choose middle value
@@ -34,9 +34,8 @@ B-tree of order n - n childern maximum, n/2 children minimum
         - insert parent's value to actual node
         - move smallest/biggest(for right/left) value from brother to parent
     b)If left and right brother(node) has not number of elements grater then minimum
-        - from parent's value, actual node's values and brother's values choose smalles value
-        - make it parent
-        - make one subtree from others value(add values from node to its brother)
+        - move other values from node and parent's value to brother node
+        - becouse we move value from parent node it could have less then minimum keys, so we must merge parent node with its brother
 4. If it was not in leaf node
     a) Change value to next value in tree
     b) Delete next value from tree
@@ -50,3 +49,15 @@ Like in binary tree
 *** Upper iteration algorithm ***
 1. In first leaf node select first value
 2. Choose next value or next subtree(if it exist) or if it is last value in node choose parent
+
+
+Example:
+
+tree = BTree.new(:n => 3)                   => Create new B-tree
+tree.add_values( ([1, 2, 3, 4, 5, 6, 7])    => Add values to tree
+tree.insert_value(10)                       => Add 10 to tree
+tree.delete_value(10)                       => Delete 10 from tree
+tree.find_value(1)                          => Return true and node id where '1' is
+tree.find_value(100)                        => Return false and node id where '100' should be added
+tree.first_value                            => Return 1
+tree.next(4)                                => Return 5

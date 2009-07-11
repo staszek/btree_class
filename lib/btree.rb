@@ -15,7 +15,17 @@
 #and write large blocks of data. It is most commonly used in databases and filesystems.
 #more: http://en.wikipedia.org/wiki/B-tree
 
-# See README file
+#Example:
+#tree = BTree.new(:n => 3)                   => Create new B-tree
+#tree.add_values( ([1, 2, 3, 4, 5, 6, 7])    => Add values to tree
+#tree.insert_value(10)                       => Add 10 to tree
+#tree.delete_value(10)                       => Delete 10 from tree
+#tree.find_value(1)                          => Return true and node id where '1' is
+#tree.find_value(100)                        => Return false and node id where '100' should be added
+#tree.first_value                            => Return 1
+#tree.next(4)                                => Return 5
+
+# See README file for more
 
 
 
@@ -245,6 +255,7 @@
         false
       end
     end
+    alias next succ
 
     # Return a first value(smalles) in a tree
     def first_value
@@ -316,10 +327,6 @@
       @keys[position]=value
     end
 
-    # Set sub tree to nil. Disconnect sub tree
-    def sub_tree_nil(position)
-      @sub_trees[position] = nil
-    end
 
     # Find subtree where you can find a value
     # Return subtree position in nood or false(value is in node)
