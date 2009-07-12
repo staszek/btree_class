@@ -16,7 +16,7 @@
 # more: http://en.wikipedia.org/wiki/B-tree
 
 # Example:
-# tree = BTree.new(:n => 3)                   => Create new B-tree
+# tree = BTree.new(:n => 3)                   => Create new B-tree (3 order)
 # tree.add_values( ([1, 2, 3, 4, 5, 6, 7])    => Add values to tree
 # tree.insert_value(10)                       => Add 10 to tree
 # tree.delete_value(10)                       => Delete 10 from tree
