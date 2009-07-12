@@ -14,7 +14,8 @@
 #   quit    => Quit
 #   show    => Show tree
 
-require "lib/btree.rb"
+require "btree"           # gem install btree-1.0.gem
+# require "lib/btree.rb"
 
 
 def show_node(tree, node)
