@@ -52,7 +52,7 @@
       node.id = @id_next
       @id_next += 1
       @nodes << node
-        end
+    end
 
     # Add many subtrees to node
     # Parameter is array of subtree ids
@@ -267,7 +267,7 @@
     end
     alias next succ
 
-    # Return a first value(smalles) in a tree or false(tree is empty)
+    # Return a first value(smallest) in a tree or false(tree is empty)
     def first_value
       tree = @nodes[@root]
       loop do
