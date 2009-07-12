@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>test_add_sub_trees (TestNode)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File test/test_node.rb, line 50</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_add_sub_trees</span>
+    <span class="ruby-identifier">false_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>([<span class="ruby-value">7</span>, <span class="ruby-value">12</span>])          
+    <span class="ruby-identifier">include_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>([<span class="ruby-value">5</span>, <span class="ruby-value">7</span>])         <span class="ruby-comment cmt"># 5 is in node</span>
+    <span class="ruby-identifier">include_other_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>([<span class="ruby-value">6</span>, <span class="ruby-value">10</span>])  <span class="ruby-comment cmt"># 10 is in node</span>
+
+    <span class="ruby-identifier">false_node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-value">4</span>
+    <span class="ruby-identifier">include_node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-value">5</span>
+    <span class="ruby-identifier">include_other_node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-value">6</span>
+
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">1</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">2</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-value">2</span>]
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">3</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-value">3</span>]
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">0</span>, <span class="ruby-ivar">@last_node</span>.<span class="ruby-identifier">parent</span>
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">false_node</span>)
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">include_node</span>)
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-keyword kw">false</span>, <span class="ruby-ivar">@root_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">include_other_node</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

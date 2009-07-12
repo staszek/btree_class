@@ -1,3 +1,4 @@
+=begin rdoc
 # == btree_class
 # Stanislaw Kolarzowski 2009
 #
@@ -30,7 +31,7 @@
 
 
 # See README file for more
-
+=end
 
 
   class BTree

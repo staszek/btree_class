@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>brother (BTree)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 143</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">brother</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">which</span>)
+      <span class="ruby-identifier">parent_node</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>]
+      <span class="ruby-identifier">position</span> = <span class="ruby-identifier">parent_node</span>.<span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">node</span>.<span class="ruby-identifier">left</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">which</span><span class="ruby-operator">==</span><span class="ruby-identifier">:left</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">parent_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]] <span class="ruby-keyword kw">else</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span><span class="ruby-operator">&lt;</span><span class="ruby-identifier">parent_node</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword kw">then</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">parent_node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]] <span class="ruby-keyword kw">else</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>check_tree (BTree)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 281</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">check_tree</span>
+      <span class="ruby-identifier">nodes</span> = <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span><span class="ruby-operator">&gt;=</span><span class="ruby-value">0</span>  } <span class="ruby-comment cmt">#without deleted</span>
+      <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">compact!</span>
+
+      <span class="ruby-identifier">size</span> = <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">all?</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;=</span><span class="ruby-ivar">@min</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&lt;=</span><span class="ruby-ivar">@max</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-identifier">val</span> = <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">all?</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">less</span>, <span class="ruby-identifier">greater</span> = [], []
+        <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sub_tree</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">less</span> <span class="ruby-operator">&lt;&lt;</span> ( <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">sub_tree</span>].<span class="ruby-identifier">right</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">index</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index</span><span class="ruby-operator">&lt;</span><span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sub_tree</span>.<span class="ruby-identifier">nil?</span> )
+          <span class="ruby-identifier">greater</span> <span class="ruby-operator">&lt;&lt;</span> ( <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">sub_tree</span>].<span class="ruby-identifier">left</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">index</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sub_tree</span>.<span class="ruby-identifier">nil?</span> )
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">less</span>.<span class="ruby-identifier">compact!</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">false</span>).<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">greater</span>.<span class="ruby-identifier">compact!</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">false</span>).<span class="ruby-identifier">nil?</span> <span class="ruby-comment cmt">#Arrays has only true values ?</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">size</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
