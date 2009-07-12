@@ -1,7 +1,7 @@
-#== btree_class
-#Stanislaw Kolarzowski 2009
+# == btree_class
+# Stanislaw Kolarzowski 2009
 #
-#Implemention of B-tree
+# Implemention of B-tree
 #    * create B-tree
 #    * insert values
 #    * delete values
@@ -9,29 +9,33 @@
 #    * upper iteration
 #    * set order(n)
 
-#In computer science, a B-tree is a tree data structure that keeps data sorted
-#and allows searches, insertions, and deletions in logarithmic amortized time.
-#Unlike self-balancing binary search trees, it is optimized for systems that read
-#and write large blocks of data. It is most commonly used in databases and filesystems.
-#more: http://en.wikipedia.org/wiki/B-tree
+# In computer science, a B-tree is a tree data structure that keeps data sorted
+# and allows searches, insertions, and deletions in logarithmic amortized time.
+# Unlike self-balancing binary search trees, it is optimized for systems that read
+# and write large blocks of data. It is most commonly used in databases and filesystems.
+# more: http://en.wikipedia.org/wiki/B-tree
 
-#Example:
-#tree = BTree.new(:n => 3)                   => Create new B-tree
-#tree.add_values( ([1, 2, 3, 4, 5, 6, 7])    => Add values to tree
-#tree.insert_value(10)                       => Add 10 to tree
-#tree.delete_value(10)                       => Delete 10 from tree
-#tree.find_value(1)                          => Return true and node id where '1' is
-#tree.find_value(100)                        => Return false and node id where '100' should be added
-#tree.first_value                            => Return 1
-#tree.next(4)                                => Return 5
+# Example:
+# tree = BTree.new(:n => 3)                   => Create new B-tree
+# tree.add_values( ([1, 2, 3, 4, 5, 6, 7])    => Add values to tree
+# tree.insert_value(10)                       => Add 10 to tree
+# tree.delete_value(10)                       => Delete 10 from tree
+# tree.find_value(1)                          => Return true and node id where '1' is
+# tree.find_value(100)                        => Return false and node id where '100' should be added
+# tree.first_value                            => Return 1
+# tree.next(4)                                => Return 5
+# tree.nodes[4]                               => Return node with id = 4
+# tree.nodes[4].keys                          => Return keys(array) from node with id = 4
+# tree.nodes[4].sub_trees                     => Return sub trees(array) from node with id = 4
+
 
 # See README file for more
 
 
 
   class BTree
-    attr_reader :n, :min, :max, :nodes, :root, :id_next
-    def initialize(options = {})
+    attr_reader :nodes, :root
+    def initialize(options = {})    # options: :n, :node
       @n = options[:n] || 5
       @nodes = []
       @max = @n - 1
@@ -47,7 +51,7 @@
       node.id = @id_next
       @id_next += 1
       @nodes << node
-    end
+        end
 
     # Add many subtrees to node
     # Parameter is array of subtree ids
@@ -58,8 +62,8 @@
     # Searching a value in the B-tree
     # Return true/false when found a value, and node id where value is or where should be added
     # Example:
-    # Node: ID:0 1 [5] 2 [10] 3 SubNode: ID:2 nil [6] nil [9] nil  Value: 7
-    # Number 7 is not in tree but it should be in node(2). Return [2, false]
+    # Node: ID:0 2 [5] 3 [10] 4 SubNode: ID:3 nil [6] nil [9] nil  Value: 7
+    # Number 7 is not in tree but it should be in node(3). Return [3, false]
     def find_value(value, node = @root)
       position = @nodes[node].find_subtree(value)
       if position==false
@@ -228,7 +232,7 @@
       node.sub_trees.compact.each { |sub_tree| brother_info[:brother].add_sub_tree(@nodes[sub_tree]) }  # move sub trees
     end
 
-    # Retrun next value in tree or false if value is maximum or not in tree
+    # Return next value in tree or false if value is maximum or not in tree
     def succ(value)
       find_result = find_value(value)
       if find_result[:find]
@@ -237,8 +241,13 @@
 
         if node.sub_trees[position+1].nil?                # Is next value in sub tree ?
           if value==node.right                            # Value is at node end ?
-            parent = @nodes[node.parent]
-            parent_position = parent.find_subtree(value)
+            if node.id==@root
+              parent = node
+              parent_position = node.keys.index(value)+1
+            else
+              parent = @nodes[node.parent]
+              parent_position = parent.find_subtree(value)
+            end
             if parent_position<parent.size then parent.keys[parent_position] else false end
           else
             node.keys[position+1]
@@ -257,14 +266,14 @@
     end
     alias next succ
 
-    # Return a first value(smalles) in a tree
+    # Return a first value(smalles) in a tree or false(tree is empty)
     def first_value
       tree = @nodes[@root]
       loop do
         break if tree.leaf?
         tree = @nodes[tree.sub_trees[0]]
       end
-      tree.left
+      if tree.size>0 then tree.left else false end
     end
 
     # Return true if B-tree is valid
@@ -331,8 +340,8 @@
     # Find subtree where you can find a value
     # Return subtree position in nood or false(value is in node)
     # Example:
-    # Node: 0 [5] 1 [10] 2  Value: 7
-    # Searching number 7 is greater then 5 and less then 10 so it can be in subtree(1). Return 1
+    # Node: 10 [5] 11 [10] 12  Value: 7
+    # Searching number 7 is greater then 5 and less then 10 so it can be in subtree(1) - node(11). Return 1
     def find_subtree(value)
       if @keys.include?(value)
         false
@@ -396,8 +405,7 @@
     # Delete value from node
     # Return true or false(value is not in tree)
     def delete(element)
-      if @keys.include?(element)
-        
+      if @keys.include?(element)       
         #Shift left
         sub_trees_old = @sub_trees.map
         ((@keys.index(element))..(@keys.size)-1).each do |i|

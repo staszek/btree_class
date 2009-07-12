@@ -61,3 +61,6 @@ tree.find_value(1)                          => Return true and node id where '1'
 tree.find_value(100)                        => Return false and node id where '100' should be added
 tree.first_value                            => Return 1
 tree.next(4)                                => Return 5
+tree.nodes[4]                               => Return node with id = 4
+tree.nodes[4].keys                          => Return keys(array) from node with id = 4
+tree.nodes[4].sub_trees                     => Return sub trees(array) from node with id = 4

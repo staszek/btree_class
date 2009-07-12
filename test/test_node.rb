@@ -48,9 +48,9 @@ class TestNode < Test::Unit::TestCase
   end
 
   def test_add_sub_trees
-    false_node = Node.new([7, 12])
-    include_node = Node.new([5, 7])
-    include_other_node = Node.new([6, 10])
+    false_node = Node.new([7, 12])          
+    include_node = Node.new([5, 7])         # 5 is in node
+    include_other_node = Node.new([6, 10])  # 10 is in node
 
     false_node.id = 4
     include_node.id = 5

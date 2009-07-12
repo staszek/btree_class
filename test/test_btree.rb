@@ -84,7 +84,6 @@ class TestBTree < Test::Unit::TestCase
     assert_not_tree(@small_tree)
   end
 
-
   def test_delete_value_in_tree
     assert_equal false, @small_tree.delete_value(11)
   end
@@ -111,24 +110,6 @@ class TestBTree < Test::Unit::TestCase
     assert_equal [6, 7], @small_tree.nodes[11].keys
     assert_equal [8], @small_tree.nodes[9].keys
     assert_equal [9, 10], @small_tree.nodes[12].keys
-
-    #delete all
-    @small_tree.delete_value(6)
-    assert_tree(@small_tree)
-    @small_tree.delete_value(9)
-    assert_tree(@small_tree)
-    @small_tree.delete_value(7)
-    assert_tree(@small_tree)
-    @small_tree.delete_value(1)
-    assert_tree(@small_tree)
-    @small_tree.delete_value(3)
-    @small_tree.delete_value(8)
-    @small_tree.delete_value(10)
-    @small_tree.delete_value(2)
-    @small_tree.delete_value(4)
-    assert_not_tree(@small_tree)
-    assert_equal [], @small_tree.nodes[@small_tree.root].keys
-
   end
 
   def test_delete_not_in_leaf
@@ -138,6 +119,30 @@ class TestBTree < Test::Unit::TestCase
     assert_equal [5], @small_tree.nodes[10].keys
     assert_equal [6, 7], @small_tree.nodes[11].keys
     assert_equal [9, 10], @small_tree.nodes[12].keys
+  end
+
+  def test_delete_all
+    @small_tree.delete_value(5)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(6)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(9)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(7)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(1)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(3)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(8)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(10)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(2)
+    assert_tree(@small_tree)
+    @small_tree.delete_value(4)
+    assert_not_tree(@small_tree)
+    assert_equal [], @small_tree.nodes[@small_tree.root].keys
   end
 
   def test_succ
