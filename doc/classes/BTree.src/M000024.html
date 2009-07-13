@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 281</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 282</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">check_tree</span>
       <span class="ruby-identifier">nodes</span> = <span class="ruby-ivar">@nodes</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span><span class="ruby-operator">&gt;=</span><span class="ruby-value">0</span>  } <span class="ruby-comment cmt">#without deleted</span>
       <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">compact!</span>

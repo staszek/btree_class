@@ -5,14 +5,14 @@
 
 <html>
 <head>
-  <title>switch_value (Node)</title>
+  <title>leaf? (Node)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 336</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">switch_value</span>(<span class="ruby-identifier">position</span>, <span class="ruby-identifier">value</span>)
-      <span class="ruby-ivar">@keys</span>[<span class="ruby-identifier">position</span>]=<span class="ruby-identifier">value</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 331</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">leaf?</span>
+      <span class="ruby-ivar">@sub_trees</span>.<span class="ruby-identifier">nitems</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

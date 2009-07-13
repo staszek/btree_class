@@ -5,19 +5,14 @@
 
 <html>
 <head>
-  <title>find_value (BTree)</title>
+  <title>add_sub_trees (BTree)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 68</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">node</span> = <span class="ruby-ivar">@root</span>)
-      <span class="ruby-identifier">position</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">value</span>)
-      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span><span class="ruby-operator">==</span><span class="ruby-keyword kw">false</span>
-        {<span class="ruby-identifier">:node</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">node</span>, <span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">true</span>}
-      <span class="ruby-keyword kw">else</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">leaf?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span> {<span class="ruby-identifier">:node</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">node</span>, <span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>} <span class="ruby-keyword kw">else</span> <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span>]) <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 59</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_sub_trees</span>(<span class="ruby-identifier">root</span>, <span class="ruby-identifier">nodes</span> = [])
+      <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">root</span>].<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>]) }
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

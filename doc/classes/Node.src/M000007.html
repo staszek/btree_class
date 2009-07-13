@@ -5,23 +5,14 @@
 
 <html>
 <head>
-  <title>find_subtree (Node)</title>
+  <title>switch_value (Node)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 346</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">value</span>)
-      <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">value</span>)
-        <span class="ruby-keyword kw">false</span>
-      <span class="ruby-keyword kw">else</span>
-        <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
-        <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">i</span><span class="ruby-operator">&lt;</span><span class="ruby-ivar">@keys</span>.<span class="ruby-identifier">size</span>
-          <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&lt;</span> <span class="ruby-ivar">@keys</span>[<span class="ruby-identifier">i</span>]
-          <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-identifier">i</span>
-      <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 336</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">switch_value</span>(<span class="ruby-identifier">position</span>, <span class="ruby-identifier">value</span>)
+      <span class="ruby-ivar">@keys</span>[<span class="ruby-identifier">position</span>]=<span class="ruby-identifier">value</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

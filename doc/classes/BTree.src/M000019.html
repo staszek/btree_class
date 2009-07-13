@@ -5,57 +5,38 @@
 
 <html>
 <head>
-  <title>merge (BTree)</title>
+  <title>delete_value (BTree)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 189</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">merge</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">empty</span> = <span class="ruby-keyword kw">false</span>)
-      <span class="ruby-identifier">parent</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>]
-      <span class="ruby-identifier">parent_size</span> = <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">size</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 157</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">switch</span> = <span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-identifier">find_result</span> = <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">find_result</span>[<span class="ruby-identifier">:find</span>]
+        <span class="ruby-identifier">node</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">find_result</span>[<span class="ruby-identifier">:node</span>]]
 
-      <span class="ruby-identifier">left_brother</span> = <span class="ruby-identifier">brother</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">:left</span>) <span class="ruby-operator">||</span> []
-      <span class="ruby-identifier">right_brother</span> = <span class="ruby-identifier">brother</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">:right</span>) <span class="ruby-operator">||</span> []
-        
-      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">left_brother</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">right_brother</span>.<span class="ruby-identifier">size</span>
-        <span class="ruby-identifier">brother_info</span> = {<span class="ruby-identifier">:brother</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">left_brother</span>, <span class="ruby-identifier">:position</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">node</span>.<span class="ruby-identifier">left</span>)<span class="ruby-operator">-</span><span class="ruby-value">1</span>, <span class="ruby-identifier">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">left_brother</span>.<span class="ruby-identifier">right</span>}
-      <span class="ruby-keyword kw">else</span>
-        <span class="ruby-identifier">brother_info</span> = {<span class="ruby-identifier">:brother</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">right_brother</span>, <span class="ruby-identifier">:position</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">node</span>.<span class="ruby-identifier">left</span>), <span class="ruby-identifier">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">right_brother</span>.<span class="ruby-identifier">left</span>}
-      <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">switch</span>
+          <span class="ruby-identifier">switch_node</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">switch</span>)[<span class="ruby-identifier">:node</span>]]
+          <span class="ruby-identifier">switch_node</span>.<span class="ruby-identifier">switch_value</span>(<span class="ruby-identifier">switch_node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">switch</span>), <span class="ruby-identifier">value</span>)
+        <span class="ruby-keyword kw">end</span>
 
-      <span class="ruby-identifier">node</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:position</span>]]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">empty</span>
-
-      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:brother</span>].<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-ivar">@min</span>
-        <span class="ruby-comment cmt"># can find brother with enough size</span>
-        <span class="ruby-identifier">node</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:position</span>]])
-        <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">switch_value</span>(<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:position</span>], <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:value</span>])
-        <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:brother</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:value</span>])
-      <span class="ruby-keyword kw">else</span>
-        <span class="ruby-comment cmt"># can not find brother with enough size</span>
-        <span class="ruby-identifier">new_keys</span> = []
-        <span class="ruby-identifier">new_keys</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>
-        <span class="ruby-identifier">new_keys</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:position</span>]]
-        <span class="ruby-identifier">new_keys</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">value</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
-        <span class="ruby-identifier">new_keys</span>.<span class="ruby-identifier">sort!</span>
-        <span class="ruby-identifier">new_keys</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span> <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:brother</span>].<span class="ruby-identifier">add</span>(<span class="ruby-identifier">key</span>)}
-   
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span><span class="ruby-operator">&lt;</span><span class="ruby-ivar">@min</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">id!</span>=<span class="ruby-ivar">@root</span>
-          <span class="ruby-comment cmt"># parent node is too small, becouse we moved one value into sub tree</span>
-          <span class="ruby-identifier">merge</span>(<span class="ruby-identifier">parent</span>, <span class="ruby-identifier">value</span>, <span class="ruby-keyword kw">true</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">leaf?</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span><span class="ruby-operator">&gt;=</span><span class="ruby-ivar">@min</span>
+            <span class="ruby-comment cmt"># leaf and enough size</span>
+            <span class="ruby-keyword kw">true</span>
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-comment cmt"># leaf but not enough size</span>
+            <span class="ruby-identifier">merge</span>(<span class="ruby-identifier">node</span>, <span class="ruby-identifier">value</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span><span class="ruby-operator">==</span><span class="ruby-ivar">@root</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">value</span>)
         <span class="ruby-keyword kw">else</span>
-          <span class="ruby-comment cmt"># parend node is big enough</span>
-          <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:position</span>]])
+            <span class="ruby-comment cmt"># not leaf</span>
+            <span class="ruby-identifier">delete_value</span>(<span class="ruby-identifier">succ</span>(<span class="ruby-identifier">value</span>), <span class="ruby-identifier">value</span>)
         <span class="ruby-keyword kw">end</span>
-        <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-value">-1</span>                                      <span class="ruby-comment cmt">#delete old node</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">id</span><span class="ruby-operator">==</span><span class="ruby-ivar">@root</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">parent_size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span><span class="ruby-operator">&lt;</span><span class="ruby-ivar">@min</span>
-          <span class="ruby-comment cmt">#change root, becouse root node is too small(all values were moved to another node)</span>
-          <span class="ruby-ivar">@root</span> = <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:brother</span>].<span class="ruby-identifier">id</span> 
-          <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">id</span>=<span class="ruby-value">-1</span>
-        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-keyword kw">false</span>
       <span class="ruby-keyword kw">end</span>
-
-      <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">sub_tree</span><span class="ruby-operator">|</span> <span class="ruby-identifier">brother_info</span>[<span class="ruby-identifier">:brother</span>].<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">sub_tree</span>]) }  <span class="ruby-comment cmt"># move sub trees</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

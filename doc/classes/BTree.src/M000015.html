@@ -5,60 +5,18 @@
 
 <html>
 <head>
-  <title>insert_value (BTree)</title>
+  <title>find_value (BTree)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 82</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">insert_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">node</span> = <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">left</span> = <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">right</span> = <span class="ruby-keyword kw">nil</span>)
-      <span class="ruby-identifier">find_result</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>) <span class="ruby-keyword kw">else</span> {<span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>} <span class="ruby-keyword kw">end</span>   <span class="ruby-comment cmt">#find node</span>
-      <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">find_result</span>[<span class="ruby-identifier">:find</span>]
-        <span class="ruby-identifier">node</span> <span class="ruby-operator">||=</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">find_result</span>[<span class="ruby-identifier">:node</span>]]
-        <span class="ruby-identifier">node</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">value</span>)
-
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">left</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">right</span>                          <span class="ruby-comment cmt">#add subtrees</span>
-          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">left</span>)
-          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">right</span>)
-        <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">&gt;</span><span class="ruby-ivar">@max</span>
-          <span class="ruby-identifier">middle</span> = <span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">/</span><span class="ruby-value">2</span>]         <span class="ruby-comment cmt">#find middle value</span>
-          <span class="ruby-identifier">left_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>
-          <span class="ruby-identifier">right_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>
-          <span class="ruby-identifier">add</span>(<span class="ruby-identifier">left_node</span>)
-          <span class="ruby-identifier">add</span>(<span class="ruby-identifier">right_node</span>)
-
-          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>                <span class="ruby-comment cmt">#make new subtrees(copy value and value's subtrees)</span>
-            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">item</span><span class="ruby-operator">&lt;</span><span class="ruby-identifier">middle</span>
-              <span class="ruby-identifier">left_node</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">item</span>)
-              <span class="ruby-identifier">left_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">item</span>)]]) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">item</span>)].<span class="ruby-identifier">nil?</span>
-            <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">item</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">middle</span>
-              <span class="ruby-identifier">right_node</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">item</span>)
-              <span class="ruby-identifier">right_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">item</span>)<span class="ruby-operator">+</span><span class="ruby-value">1</span>]]) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">item</span>)<span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">nil?</span>
-            <span class="ruby-keyword kw">end</span>
-          <span class="ruby-keyword kw">end</span>
-
-          <span class="ruby-comment cmt"># add middle_value's subtrees to left and right subtrees</span>
-          <span class="ruby-identifier">left_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">middle</span>)]]) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">middle</span>)].<span class="ruby-identifier">nil?</span>
-          <span class="ruby-identifier">right_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">middle</span>)<span class="ruby-operator">+</span><span class="ruby-value">1</span>]]) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">middle</span>)<span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">nil?</span>
-
-          <span class="ruby-comment cmt"># add value to parent node or split if parent is root</span>
-          <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span><span class="ruby-operator">==</span><span class="ruby-ivar">@root</span>
-            <span class="ruby-identifier">insert_value</span>(<span class="ruby-identifier">middle</span>, <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>], <span class="ruby-identifier">left_node</span>, <span class="ruby-identifier">right_node</span>)
-          <span class="ruby-keyword kw">else</span>
-            <span class="ruby-identifier">new_root_node</span> = <span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>
-            <span class="ruby-identifier">add</span>(<span class="ruby-identifier">new_root_node</span>)
-            <span class="ruby-identifier">new_root_node</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">middle</span>)
-            <span class="ruby-identifier">new_root_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">left_node</span>)
-            <span class="ruby-identifier">new_root_node</span>.<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-identifier">right_node</span>)
-            <span class="ruby-ivar">@root</span> = <span class="ruby-identifier">new_root_node</span>.<span class="ruby-identifier">id</span>
-          <span class="ruby-keyword kw">end</span>
-          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-value">-1</span>                            <span class="ruby-comment cmt">#delete old node</span>
-        <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 68</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">node</span> = <span class="ruby-ivar">@root</span>)
+      <span class="ruby-identifier">position</span> = <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">find_subtree</span>(<span class="ruby-identifier">value</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">position</span><span class="ruby-operator">==</span><span class="ruby-keyword kw">false</span>
+        {<span class="ruby-identifier">:node</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">node</span>, <span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">true</span>}
       <span class="ruby-keyword kw">else</span>
-        <span class="ruby-keyword kw">false</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">leaf?</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span> {<span class="ruby-identifier">:node</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">node</span>, <span class="ruby-identifier">:find</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">false</span>} <span class="ruby-keyword kw">else</span> <span class="ruby-identifier">find_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">sub_trees</span>[<span class="ruby-identifier">position</span>]) <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>

@@ -5,14 +5,16 @@
 
 <html>
 <head>
-  <title>add_sub_trees (BTree)</title>
+  <title>add (BTree)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 59</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_sub_trees</span>(<span class="ruby-identifier">root</span>, <span class="ruby-identifier">nodes</span> = [])
-      <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">root</span>].<span class="ruby-identifier">add_sub_tree</span>(<span class="ruby-ivar">@nodes</span>[<span class="ruby-identifier">node</span>]) }
+  <pre><span class="ruby-comment cmt"># File lib/btree.rb, line 51</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>(<span class="ruby-identifier">node</span>)
+      <span class="ruby-identifier">node</span>.<span class="ruby-identifier">id</span> = <span class="ruby-ivar">@id_next</span>
+      <span class="ruby-ivar">@id_next</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-ivar">@nodes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">node</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -18,26 +18,26 @@ more: http://en.wikipedia.org/wiki/B-tree
 B-tree of order n - n childern maximum, n/2 children minimum
 
 == Insert algorithm
-* Find leaf where insert value
-* If leaf is not full(contain less then maximum elements), insert value
-* If it is full:
-a) choose middle value
-b) make it parent, and make 2 subtrees(values less then middle value - left tree. greater then middle value - right tree)
-c) insert middle value to its parent node
+1. Find leaf where insert value
+2. If leaf is not full(contain less then maximum elements), insert value
+3. If it is full:
+* choose middle value
+* make it parent, and make 2 subtrees(values less then middle value - left tree. greater then middle value - right tree)
+* insert middle value to its parent node
 
 == Delete algorithm
-* Find element and delete it
-* If it was in leaf node and number of elements is now not less then minimum do nothing
-* If it was in leaf node and number of elements is now less then minimum do
+1. Find element and delete it
+2. If it was in leaf node and number of elements is now not less then minimum do nothing
+3. If it was in leaf node and number of elements is now less then minimum do
 a) If left or right brother(node) has number of elements grater then minimum
-1. insert parent's value to actual node
-2. move smallest/biggest(for right/left) value from brother to parent
+* insert parent's value to actual node
+* move smallest/biggest(for right/left) value from brother to parent
 b) If left and right brother(node) has not number of elements grater then minimum
-1. move other values from node and parent's value to brother node
-2. becouse we move value from parent node it could have less then minimum keys, so we must merge parent node with its brother
-* If it was not in leaf node
-a) Change value to next value in tree
-b) Delete next value from tree
+* move other values from node and parent's value to brother node
+* becouse we move value from parent node it could have less then minimum keys, so we must merge parent node with its brother
+4. If it was not in leaf node
+* Change value to next value in tree
+* Delete next value from tree
 
 == Searching algorithm
 Like in binary tree

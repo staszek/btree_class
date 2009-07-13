@@ -101,8 +101,8 @@ amortized time. Unlike self-balancing binary search trees, it is optimized
 for systems that read and write large blocks of data. It is most commonly
 used in databases and filesystems. more: <a
 href="http://en.wikipedia.org/wiki/B-tree">en.wikipedia.org/wiki/B-tree</a>
-Example: tree = <a href="BTree.html#M000011">BTree.new</a>(:n =&gt; 3)
-=&gt; Create <a href="BTree.html#M000011">new</a> B-tree (3 order)
+Example: tree = <a href="BTree.html#M000012">BTree.new</a>(:n =&gt; 3)
+=&gt; Create <a href="BTree.html#M000012">new</a> B-tree (3 order)
 tree.add_values( ([1, 2, 3, 4, 5, 6, 7]) =&gt; Add values to tree
 tree.insert_value(10) =&gt; Add 10 to tree tree.delete_value(10) =&gt;
 Delete 10 from tree tree.find_value(1) =&gt; Return true and node id where
@@ -123,19 +123,19 @@ See README file for more
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000012">add</a>&nbsp;&nbsp;
-      <a href="#M000013">add_sub_trees</a>&nbsp;&nbsp;
-      <a href="#M000016">add_values</a>&nbsp;&nbsp;
-      <a href="#M000017">brother</a>&nbsp;&nbsp;
-      <a href="#M000023">check_tree</a>&nbsp;&nbsp;
-      <a href="#M000018">delete_value</a>&nbsp;&nbsp;
-      <a href="#M000014">find_value</a>&nbsp;&nbsp;
-      <a href="#M000022">first_value</a>&nbsp;&nbsp;
-      <a href="#M000015">insert_value</a>&nbsp;&nbsp;
-      <a href="#M000019">merge</a>&nbsp;&nbsp;
-      <a href="#M000011">new</a>&nbsp;&nbsp;
-      <a href="#M000021">next</a>&nbsp;&nbsp;
-      <a href="#M000020">succ</a>&nbsp;&nbsp;
+      <a href="#M000013">add</a>&nbsp;&nbsp;
+      <a href="#M000014">add_sub_trees</a>&nbsp;&nbsp;
+      <a href="#M000017">add_values</a>&nbsp;&nbsp;
+      <a href="#M000018">brother</a>&nbsp;&nbsp;
+      <a href="#M000024">check_tree</a>&nbsp;&nbsp;
+      <a href="#M000019">delete_value</a>&nbsp;&nbsp;
+      <a href="#M000015">find_value</a>&nbsp;&nbsp;
+      <a href="#M000023">first_value</a>&nbsp;&nbsp;
+      <a href="#M000016">insert_value</a>&nbsp;&nbsp;
+      <a href="#M000020">merge</a>&nbsp;&nbsp;
+      <a href="#M000012">new</a>&nbsp;&nbsp;
+      <a href="#M000022">next</a>&nbsp;&nbsp;
+      <a href="#M000021">succ</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -175,12 +175,12 @@ See README file for more
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000011" class="method-detail">
-        <a name="M000011"></a>
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000011.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000011.html');return false;">
+          <a href="BTree.src/M000012.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000012.html');return false;">
           <span class="method-name">new</span><span class="method-args">(options = {})</span>
           </a>
         </div>
@@ -191,12 +191,12 @@ See README file for more
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000012" class="method-detail">
-        <a name="M000012"></a>
+      <div id="method-M000013" class="method-detail">
+        <a name="M000013"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000012.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000012.html');return false;">
+          <a href="BTree.src/M000013.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000013.html');return false;">
           <span class="method-name">add</span><span class="method-args">(node)</span>
           </a>
         </div>
@@ -208,12 +208,12 @@ Add node to a tree. Set id number of node
         </div>
       </div>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000014" class="method-detail">
+        <a name="M000014"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000013.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000013.html');return false;">
+          <a href="BTree.src/M000014.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000014.html');return false;">
           <span class="method-name">add_sub_trees</span><span class="method-args">(root, nodes = [])</span>
           </a>
         </div>
@@ -225,12 +225,12 @@ Add many subtrees to node Parameter is array of subtree ids
         </div>
       </div>
 
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000016.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000016.html');return false;">
+          <a href="BTree.src/M000017.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000017.html');return false;">
           <span class="method-name">add_values</span><span class="method-args">(values = [])</span>
           </a>
         </div>
@@ -242,35 +242,35 @@ Add many values into tree
         </div>
       </div>
 
-      <div id="method-M000017" class="method-detail">
-        <a name="M000017"></a>
+      <div id="method-M000018" class="method-detail">
+        <a name="M000018"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000017.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000017.html');return false;">
+          <a href="BTree.src/M000018.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000018.html');return false;">
           <span class="method-name">brother</span><span class="method-args">(node, which)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return left or right <a href="BTree.html#M000017">brother</a> node(node
+Return left or right <a href="BTree.html#M000018">brother</a> node(node
 with the same parent) Return false if node does not have <a
-href="BTree.html#M000017">brother</a> Example: <a
-href="BTree.html#M000017">brother</a>(6, :left) - return left <a
-href="BTree.html#M000017">brother</a> of node(6) <a
-href="BTree.html#M000017">brother</a>(6, :right) - return right <a
-href="BTree.html#M000017">brother</a> of node(6)
+href="BTree.html#M000018">brother</a> Example: <a
+href="BTree.html#M000018">brother</a>(6, :left) - return left <a
+href="BTree.html#M000018">brother</a> of node(6) <a
+href="BTree.html#M000018">brother</a>(6, :right) - return right <a
+href="BTree.html#M000018">brother</a> of node(6)
 </p>
         </div>
       </div>
 
-      <div id="method-M000023" class="method-detail">
-        <a name="M000023"></a>
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000023.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000023.html');return false;">
+          <a href="BTree.src/M000024.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000024.html');return false;">
           <span class="method-name">check_tree</span><span class="method-args">()</span>
           </a>
         </div>
@@ -282,12 +282,12 @@ Return true if B-tree is valid Checking nodes size and values
         </div>
       </div>
 
-      <div id="method-M000018" class="method-detail">
-        <a name="M000018"></a>
+      <div id="method-M000019" class="method-detail">
+        <a name="M000019"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000018.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000018.html');return false;">
+          <a href="BTree.src/M000019.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000019.html');return false;">
           <span class="method-name">delete_value</span><span class="method-args">(value, switch = nil)</span>
           </a>
         </div>
@@ -295,19 +295,19 @@ Return true if B-tree is valid Checking nodes size and values
         <div class="method-description">
           <p>
 Delete value from tree Return false if value is not in tree <a
-href="BTree.html#M000018">delete_value</a>(10) =&gt; Delete 10 from tree <a
-href="BTree.html#M000018">delete_value</a>(10, 5) =&gt; Switch 5 to 10 and
+href="BTree.html#M000019">delete_value</a>(10) =&gt; Delete 10 from tree <a
+href="BTree.html#M000019">delete_value</a>(10, 5) =&gt; Switch 5 to 10 and
 delete 10(old one) from tree
 </p>
         </div>
       </div>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000014.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000014.html');return false;">
+          <a href="BTree.src/M000015.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000015.html');return false;">
           <span class="method-name">find_value</span><span class="method-args">(value, node = @root)</span>
           </a>
         </div>
@@ -323,51 +323,51 @@ Return [3, false]
         </div>
       </div>
 
-      <div id="method-M000022" class="method-detail">
-        <a name="M000022"></a>
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000022.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000022.html');return false;">
+          <a href="BTree.src/M000023.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000023.html');return false;">
           <span class="method-name">first_value</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return a first value(smalles) in a tree or false(tree is empty)
+Return a first value(smallest) in a tree or false(tree is empty)
 </p>
         </div>
       </div>
 
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000015.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000015.html');return false;">
+          <a href="BTree.src/M000016.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000016.html');return false;">
           <span class="method-name">insert_value</span><span class="method-args">(value, node = nil, left = nil, right = nil)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Insert <a href="BTree.html#M000011">new</a> value into B-tree Return false
+Insert <a href="BTree.html#M000012">new</a> value into B-tree Return false
 if value is already in tree <a
-href="BTree.html#M000015">insert_value</a>(value) - insert value into tree
-<a href="BTree.html#M000015">insert_value</a>(value, node, left, right) -
+href="BTree.html#M000016">insert_value</a>(value) - insert value into tree
+<a href="BTree.html#M000016">insert_value</a>(value, node, left, right) -
 insert value into given node with left and right subtrees it is use only as
 recursive method
 </p>
         </div>
       </div>
 
-      <div id="method-M000019" class="method-detail">
-        <a name="M000019"></a>
+      <div id="method-M000020" class="method-detail">
+        <a name="M000020"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000019.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000019.html');return false;">
+          <a href="BTree.src/M000020.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000020.html');return false;">
           <span class="method-name">merge</span><span class="method-args">(node, value, empty = false)</span>
           </a>
         </div>
@@ -382,8 +382,8 @@ Merge nodes if one has less then minimum keys Parameter &quot;empty&quot;
         </div>
       </div>
 
-      <div id="method-M000021" class="method-detail">
-        <a name="M000021"></a>
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
 
         <div class="method-heading">
           <span class="method-name">next</span><span class="method-args">(value)</span>
@@ -391,24 +391,24 @@ Merge nodes if one has less then minimum keys Parameter &quot;empty&quot;
       
         <div class="method-description">
           <p>
-Alias for <a href="BTree.html#M000020">succ</a>
+Alias for <a href="BTree.html#M000021">succ</a>
 </p>
         </div>
       </div>
 
-      <div id="method-M000020" class="method-detail">
-        <a name="M000020"></a>
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
 
         <div class="method-heading">
-          <a href="BTree.src/M000020.html" target="Code" class="method-signature"
-            onclick="popupCode('BTree.src/M000020.html');return false;">
+          <a href="BTree.src/M000021.html" target="Code" class="method-signature"
+            onclick="popupCode('BTree.src/M000021.html');return false;">
           <span class="method-name">succ</span><span class="method-args">(value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return <a href="BTree.html#M000021">next</a> value in tree or false if
+Return <a href="BTree.html#M000022">next</a> value in tree or false if
 value is maximum or not in tree
 </p>
         </div>
