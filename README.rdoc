@@ -1,0 +1,73 @@
+== btree_class
+Stanislaw Kolarzowski 2009
+
+Implemention of B-tree
+* create B-tree
+* insert values
+* delete values
+* searching values
+* upper iteration
+* set order(n)
+
+In computer science, a B-tree is a tree data structure that keeps data sorted
+and allows searches, insertions, and deletions in logarithmic amortized time.
+Unlike self-balancing binary search trees, it is optimized for systems that read
+and write large blocks of data. It is most commonly used in databases and filesystems.
+more: http://en.wikipedia.org/wiki/B-tree
+
+B-tree of order n - n childern maximum, n/2 children minimum
+
+== Insert algorithm
+* Find leaf where insert value
+* If leaf is not full(contain less then maximum elements), insert value
+* If it is full:
+    * choose middle value
+    * make it parent, and make 2 subtrees(values less then middle value - left tree.
+        greater then middle value - right tree)
+    * insert middle value to its parent node
+
+== Delete algorithm
+* Find element and delete it
+* If it was in leaf node and number of elements is now not less then minimum do nothing
+* If it was in leaf node and number of elements is now less then minimum do
+    * If left or right brother(node) has number of elements grater then minimum
+        * insert parent's value to actual node
+        * move smallest/biggest(for right/left) value from brother to parent
+    * If left and right brother(node) has not number of elements grater then minimum
+        * move other values from node and parent's value to brother node
+        * becouse we move value from parent node it could have less then minimum keys, so we must merge parent node with its brother
+* If it was not in leaf node
+    * Change value to next value in tree
+    * Delete next value from tree
+
+== Searching algorithm
+Like in binary tree
+* If searching value is less then key choose left subtree
+* If searching value is greater then key check next key or choose right tree(if it is last element)
+* Check tree recursive
+
+== Upper iteration algorithm
+* In first leaf node select first value
+* Choose next value or next subtree(if it exist) or if it is last value in node choose parent
+
+
+== Example:
+Create new B-tree (3 order)
+    tree = BTree.new(:n => 3)
+Add values to tree
+    tree.add_values( ([1, 2, 3, 4, 5, 6, 7])
+Add 10 to tree
+    tree.insert_value(10)
+Delete 10 from tree
+    tree.delete_value(10)
+Finding
+    tree.find_value(1)          # Return true and node id where '1' is
+    tree.find_value(100)        # Return false and node id where '100' should be added
+First value
+    tree.first_value            # Return 1
+Next value after 4
+    tree.next(4)                # Return 5
+Nodes
+    tree.nodes[4]               # Return node with id = 4
+    tree.nodes[4].keys          # Return keys(array) from node with id = 4
+    tree.nodes[4].sub_trees     # Return sub trees(array) from node with id = 4
